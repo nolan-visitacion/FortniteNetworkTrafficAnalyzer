@@ -31,7 +31,7 @@ def plot_traffic(time_stamps, data_volumes):
     plt.show()
 
 if __name__ == "__main__":
-    pcap_path = 'path_to_your_pcap_file.pcap'
+    pcap_path = r'Fortnite Game.pcapng'
     packet_count, time_stamps, data_volumes = analyze_traffic_patterns(pcap_path)
     print(f"Packet Count by Protocol: {packet_count}")
     plot_traffic(time_stamps, data_volumes)

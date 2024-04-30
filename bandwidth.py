@@ -1,42 +1,25 @@
 import pyshark
 
-def calculate_bandwidth(pcap_file):
-    cap = pyshark.FileCapture(pcap_file)
+def calculate_bandwidth_by_ip_address(pcap_file, ip_address):
 
+    display_filter = f'ip.addr == {ip_address}'
+    cap = pyshark.FileCapture(pcap_file, display_filter=display_filter)
     total_bytes = 0
-    for packet in cap:
-        try:
+
+    try:
+        for packet in cap:
             if 'IP' in packet:
                 total_bytes += int(packet.ip.len)
-        except AttributeError:
-            continue
+    except Exception as e:
+        print(f"Error processing packet: {e}")
+    finally:
+        cap.close()
 
-    cap.close()
-
-
-    total_megabytes = total_bytes / (1024 * 1024)
-    return total_megabytes
-
-def calculate_bandwidth_by_port(pcap_file, port):
-
-    filter_str = f"udp port {port}"
-    cap = pyshark.FileCapture(pcap_file, display_filter=filter_str)
-
-    total_bytes = 0
-    for packet in cap:
-        try:
-            if 'IP' in packet:
-                total_bytes += int(packet.ip.len)
-        except AttributeError:
-            continue
-
-    cap.close()
     return total_bytes / (1024 * 1024)  
 
 
-
 if __name__ == "__main__":
-    pcap_path = r'C:\Users\nolan\OneDrive\Documents\School\CPE 400\Project\Fortnite Game.pcapng'
-    fortnite_port = 57269  
-    total_megabytes = calculate_bandwidth_by_port(pcap_path, fortnite_port)
+    pcap_path = r'Fortnite Game.pcapng'
+    ip_address = '34.83.216.43'  
+    total_megabytes = calculate_bandwidth_by_ip_address(pcap_path, ip_address)
     print(f"Total Data Used: {total_megabytes:.2f} MB")
