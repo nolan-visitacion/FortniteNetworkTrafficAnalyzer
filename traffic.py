@@ -1,3 +1,4 @@
+import sys
 import pyshark
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -22,8 +23,9 @@ def analyze_traffic_patterns(pcap_file):
     return packet_count, time_stamps, data_volumes
 
 def plot_traffic(time_stamps, data_volumes):
+    relative_timestamps = [ts - min(time_stamps) for ts in time_stamps]
     plt.figure(figsize=(10, 5))
-    plt.plot(time_stamps, data_volumes, label='Data Volume Over Time')
+    plt.plot(relative_timestamps, data_volumes, label='Data Volume Over Time')
     plt.xlabel('Time (seconds)')
     plt.ylabel('Data Volume (bytes)')
     plt.title('Traffic Data Volume Over Time')
@@ -31,7 +33,15 @@ def plot_traffic(time_stamps, data_volumes):
     plt.show()
 
 if __name__ == "__main__":
-    pcap_path = r'Fortnite Game.pcapng'
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <.pcap file>")
+        sys.exit(1)
+    
+    pcap_path = sys.argv[1]
     packet_count, time_stamps, data_volumes = analyze_traffic_patterns(pcap_path)
-    print(f"Packet Count by Protocol: {packet_count}")
+    for protocol, count in packet_count.items():
+        if protocol is None: 
+            print('None: {}'.format(count))
+        else:
+            print('{}: {}'.format(protocol, count))
     plot_traffic(time_stamps, data_volumes)

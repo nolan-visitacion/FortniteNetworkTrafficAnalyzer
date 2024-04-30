@@ -19,7 +19,7 @@ def calculate_bandwidth_by_ip_address(pcap_file, ip_address):
 
 
 if __name__ == "__main__":
-    pcap_path = r'Fortnite Game.pcapng'
-    ip_address = '34.83.216.43'  
+    pcap_path = r'Game 1.pcapng'
+    ip_address = '18.237.54.170'  
     total_megabytes = calculate_bandwidth_by_ip_address(pcap_path, ip_address)
     print(f"Total Data Used: {total_megabytes:.2f} MB")
